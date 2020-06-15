@@ -38,6 +38,12 @@ def get_movie_rating(movdat):
     return int(tomdat[0].replace('%', ''))
 
 
+def get_sorted_recommendations(movies):
+    titles = get_related_titles(movies)
+    ratings = zip([get_movie_rating(get_movie_data(x)) for x in titles], titles)
+    ratings.sort(key=lambda x: x[0], reverse=True)
+    return [x[1] for x in ratings]
+
 # some invocations that we use in the automated tests; uncomment these if you are getting errors and want better error messages
 # get_sorted_recommendations(["Bridesmaids", "Sherlock Holmes"])
 
