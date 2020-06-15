@@ -28,3 +28,16 @@ def get_movie_data(movie):
     dic['t'] = movie
     dic['r'] = 'json'
     return requests_with_caching.get(baseurl, params=dic).json()
+
+
+def get_movie_rating(movdat):
+    # print (movdat)
+    tomdat = [rat['Value'] for rat in movdat['Ratings'] if rat['Source'] is 'Rotten Tomatoes']
+    if len(tomdat) is 0:
+        return 0
+    return int(tomdat[0].replace('%', ''))
+
+
+# some invocations that we use in the automated tests; uncomment these if you are getting errors and want better error messages
+# get_sorted_recommendations(["Bridesmaids", "Sherlock Holmes"])
+
