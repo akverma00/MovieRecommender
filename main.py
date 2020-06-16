@@ -45,7 +45,7 @@ def get_sorted_recommendations(movies):
     titles = get_related_titles(movies)
     #return titles
     ratings = list(zip([get_movie_rating(get_movie_data(x)) for x in titles], titles))
-    print(ratings)
+    #print(ratings)
     ratings=sorted(ratings,key=lambda x: x[0], reverse=True)
     return [x[1] for x in ratings]
 
@@ -53,6 +53,15 @@ def get_sorted_recommendations(movies):
 
 
 movies=["Avengers", "Tron"]
+custom=[]
+num=int(str(input("Enter Number of Movies:")))
+for i in range(num):
+    custom.append(input("Enter A Movie :"))
+if num!=0:
+    movies=custom
+else:
+    print("Example set")
+    print(movies)
 
 print(get_sorted_recommendations(movies))
 
