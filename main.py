@@ -1,4 +1,4 @@
-import requests_with_caching
+import requests
 import json
 
 
@@ -8,7 +8,7 @@ def get_movies_from_tastedive(word):
     dic['q'] = word
     dic['type'] = "movies"
     dic['limit'] = 5
-    return requests_with_caching.get(baseurl, params=dic).json()
+    return requests.get(baseurl, params=dic).json()
 
 
 def extract_movie_titles(word):
@@ -25,25 +25,36 @@ def get_related_titles(movies):
 def get_movie_data(movie):
     baseurl = "http://www.omdbapi.com/"
     dic = {}
+    dic['apikey'] = "abff2e05"
     dic['t'] = movie
     dic['r'] = 'json'
-    return requests_with_caching.get(baseurl, params=dic).json()
+    return requests.get(baseurl, params=dic).json()
 
 
 def get_movie_rating(movdat):
     # print (movdat)
-    tomdat = [rat['Value'] for rat in movdat['Ratings'] if rat['Source'] is 'Rotten Tomatoes']
+    tomdat = [rat['Value'] for rat in movdat['Ratings'] if rat['Source'] == 'Rotten Tomatoes']
     if len(tomdat) is 0:
-        return 0
-    return int(tomdat[0].replace('%', ''))
+        val= 0
+    else :
+        val = int(tomdat[0].replace('%', ''))
+    return val
 
 
 def get_sorted_recommendations(movies):
     titles = get_related_titles(movies)
-    ratings = zip([get_movie_rating(get_movie_data(x)) for x in titles], titles)
-    ratings.sort(key=lambda x: x[0], reverse=True)
+    #return titles
+    ratings = list(zip([get_movie_rating(get_movie_data(x)) for x in titles], titles))
+    print(ratings)
+    ratings=sorted(ratings,key=lambda x: x[0], reverse=True)
     return [x[1] for x in ratings]
 
 # some invocations that we use in the automated tests; uncomment these if you are getting errors and want better error messages
-# get_sorted_recommendations(["Bridesmaids", "Sherlock Holmes"])
+
+
+movies=["Avengers", "Tron"]
+
+print(get_sorted_recommendations(movies))
+
+
 
